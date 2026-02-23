@@ -1,4 +1,5 @@
 import typescript from '@rollup/plugin-typescript';
+import copy from 'rollup-plugin-copy'
 
 export default {
   input: 'src/extension.ts',
@@ -7,6 +8,14 @@ export default {
     format: 'es',
     sourcemap: true
   },
-  plugins: [typescript()]
+  plugins: [
+    typescript(),
+    copy({
+      targets: [
+        { src: 'src/style/stylesheet.css', dest: 'dist/' },
+        { src: 'metadata.json', dest: 'dist/' },
+      ]
+    })
+  ]
 };
 
