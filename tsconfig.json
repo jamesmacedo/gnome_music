@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "paths": {
+      "gi://*": ["./node_modules/@girs/*"],
+      "resource:///org/gnome/shell/extensions/extension.js": [
+        "./node_modules/@girs/gnome-shell/dist/extensions/extension.d.ts"
+      ]
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "MPRIS Controller",
+  "description": "Exemplo de acesso ao MPRIS",
+  "uuid": "music_indicator@jamesmacedo.dev",
+  "shell-version": [ "45", "46", "47", "48", "49" ]
+}
