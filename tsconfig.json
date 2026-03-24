@@ -1,4 +1,8 @@
 {
+  "include": [
+    "*.d.ts",
+    "src"
+  ],
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
@@ -8,6 +12,7 @@
     "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {
+      "@/*": ["src/*"],
       "gi://*": ["./node_modules/@girs/*"],
       "resource:///org/gnome/shell/extensions/extension.js": [
         "./node_modules/@girs/gnome-shell/dist/extensions/extension.d.ts"

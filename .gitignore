@@ -2,3 +2,4 @@
 /dist/**/*.js
 /dist/**/*.js.*
 dist.tgz
+*.html

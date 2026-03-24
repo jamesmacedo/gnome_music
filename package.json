@@ -8,7 +8,9 @@
     "dist": "npm run build && tar -czf dist.tgz -C dist .",
     "wayland": "dbus-run-session -- env MUTTER_DEBUG_NUM_DUMMY_MONITORS=1 MUTTER_DEBUG_DUMMY_MODE_SPECS=1920x1080 gnome-shell --nested --wayland",
     "install": "npm run dist && gnome-extensions install -f dist.tgz",
-    "dev": "npm run install && npm run wayland"
+    "dev": "npm run install && npm run wayland",
+    "reload": "rm -rf ~/.local/share/gnome-shell/extensions/music_indicator@jamesmacedo.dev && npm run install && gnome-extensions enable music_indicator@jamesmacedo.dev",
+    "log": "journalctl -f -o cat"
   },
   "author": "",
   "license": "ISC",
@@ -20,11 +22,21 @@
     "@girs/glib-2.0": "^2.86.0-4.0.0-beta.38",
     "@girs/gnome-shell": "^49.1.0",
     "@girs/st-15": "^15.0.0-4.0.0-beta.38",
+    "@rollup/plugin-commonjs": "^29.0.0",
+    "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-typescript": "^12.3.0",
     "rollup": "^4.59.0",
     "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-sass": "^1.15.3",
     "tslib": "^2.8.1",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@clicks/get-pixels": "^4.0.3",
+    "@girs/node-gdkpixbuf-2.0": "^2.0.0-3.3.0",
+    "@rollup/plugin-babel": "^6.1.0",
+    "@types/get-pixels": "^3.3.4",
+    "jimp": "^1.6.0",
+    "js-md5": "^0.8.3"
   }
 }
