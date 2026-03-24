@@ -33,7 +33,7 @@ export class Cluster {
         }
 
         for(let i=0; i<this.k; i++){
-            this.centroids.push(this.pixels[Math.floor(Math.random() * this.pixels.length)])
+            this.centroids.push(this.getRandomVibrantPixel())
         }
     }
 
@@ -46,37 +46,34 @@ export class Cluster {
 
         for(let y = 0;y < target_h; y++){
             for(let x = 0; x < target_w; x++){
-                let r = 0, g = 0, b = 0, a = 0
-                let count = 0
 
-                const yStart = y * blockH, xStart = x * blockW; 
+                const origX = x * blockW + Math.floor(blockW/2);
+                const origY = y * blockH + Math.floor(blockH/2);
 
-                for(let i = 0; i <blockH; i++){
-                    for(let j = 0; j < blockW; j++){
-                        const origX = xStart + j;
-                        const origY = yStart + i;
+                if(origX < w && origY < h){
 
-                        if(origX < w && origY < h){
-                            const idx = (origY * w + origX) * 4
-                            r += pixels[idx]
-                            g += pixels[idx + 1]
-                            b += pixels[idx + 2]
+                    const idx = (origY * w + origX) * 4
+                    const outIdx = (y * target_w + x) * 4
 
-                            count++
-                        }
-                    }
+                    output[outIdx] = pixels[idx] 
+                    output[outIdx + 1] = pixels[idx + 1] 
+                    output[outIdx + 2] = pixels[idx + 2] 
+                    output[outIdx + 3] = pixels[idx + 3] 
                 }
-
-                const outIdx = (y * target_w + x) * 4
-
-                output[outIdx] = Math.round(r / count)
-                output[outIdx + 1] = Math.round(g / count)
-                output[outIdx + 2] = Math.round(b / count)
             }
         }
 
         return output
 
+    }
+
+    getRandomVibrantPixel(): Pixel {
+        for (let i = 0; i < 50; i++) {
+            const p = this.pixels[Math.floor(Math.random() * this.pixels.length)];
+            const brightness = (p.r + p.g + p.b) / 3;
+            if (brightness > 30 && brightness < 225) return p;
+        }
+        return this.pixels[Math.floor(Math.random() * this.pixels.length)];
     }
 
     componentToHex(c) {
@@ -119,22 +116,31 @@ export class Cluster {
                 clusters[closestIndex].sum[2] += pixel.b;
             }
 
-            clusters = clusters.filter((c => c.pixels.length >= this.threshold)).sort((a, b) => b.pixels.length - a.pixels.length);
+            clusters = clusters.filter((c => c.pixels.length >= this.threshold));
 
             let changed = false;
-            for(let i:number ; i<this.k; i++){
+            for(let i= 0; i<clusters.length; i++){
                 const count = clusters[i].pixels.length;
-                if(count > 0){
-                    const newCentroid = {
-                        "r": Math.round(clusters[i].sum[0]/count),
-                        "g": Math.round(clusters[i].sum[1]/count),
-                        "b": Math.round(clusters[i].sum[2]/count),
-                    } as Pixel;
+                const newMean = {
+                    "r": Math.round(clusters[i].sum[0]/count),
+                    "g": Math.round(clusters[i].sum[1]/count),
+                    "b": Math.round(clusters[i].sum[2]/count),
+                } as Pixel;
 
-                    if(!arraysEqual(newCentroid, this.centroids[i])){
-                        this.centroids[i] = newCentroid; 
-                        changed = true;
+                let closestPixel = clusters[i].pixels[0]
+                let minD = Infinity
+
+                for(let p of clusters[i].pixels){
+                    let d = distance(p, newMean)
+                    if(d<minD){
+                        minD = d  
+                        closestPixel = d
                     }
+                }
+
+                if(!arraysEqual(closestPixel, this.centroids[i])){
+                    this.centroids[i] = newMean; 
+                    changed = true;
                 }
             }
 
